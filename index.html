@@ -11,7 +11,8 @@
             --card-bg: #ffffff;
             --primary-green: #a7d08c;
             --alert-red: #f3a3a3;
-            --btn-gray: #e5e7eb;
+            --btn-gray: #f3f4f6;
+            --border-color: #e5e7eb;
         }
 
         * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -22,54 +23,53 @@
             width: 100%;
             max-width: 450px;
             min-height: 650px;
-            border-radius: 25px;
+            border-radius: 30px;
             padding: 40px;
             position: relative;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px solid #000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         .slide { display: none; flex-direction: column; height: 100%; text-align: center; flex-grow: 1; }
         .slide.active { display: flex; }
 
-        h2 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 700; }
-        p.description { font-size: 14px; color: #666; margin-bottom: 30px; font-style: italic; line-height: 1.4; }
+        h2 { font-size: 28px; color: #1f2937; margin-bottom: 8px; font-weight: 700; line-height: 1.2; text-align: left; }
+        p.description { font-size: 15px; color: #6b7280; margin-bottom: 32px; line-height: 1.5; text-align: left; }
 
         input[type="number"] {
             width: 100%;
-            padding: 15px;
-            border: 2px solid var(--btn-gray);
-            border-radius: 15px;
+            padding: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
             font-size: 20px;
             margin-bottom: 20px;
             outline: none;
-            text-align: center;
-            background-color: #f9fafb;
+            transition: border-color 0.2s;
         }
+        input[type="number"]:focus { border-color: #3b82f6; }
 
-        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
         .opt-btn {
             background: var(--btn-gray);
-            border: none;
-            padding: 15px;
-            border-radius: 15px;
+            border: 2px solid transparent;
+            padding: 16px;
+            border-radius: 16px;
             cursor: pointer;
             font-weight: 700;
             transition: all 0.2s;
             font-size: 13px;
-            color: #000;
+            color: #1f2937;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 70px;
-            line-height: 1.2;
+            min-height: 85px;
         }
-        .opt-btn b { display: block; margin-bottom: 4px; }
-        .opt-btn.selected { border: 3px solid #333; transform: scale(0.98); }
-        .opt-btn:disabled { opacity: 0.25; cursor: not-allowed; filter: grayscale(1); }
+        .opt-btn b { font-size: 14px; margin-bottom: 4px; }
+        .opt-btn span { font-weight: 400; font-size: 12px; color: #4b5563; }
+        .opt-btn.selected { border-color: #1f2937; background: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .opt-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
 
         .nav-area { 
             margin-top: auto; 
@@ -77,74 +77,71 @@
             justify-content: center; 
             align-items: center; 
             position: relative; 
-            min-height: 90px;
-            width: 100%;
+            padding-top: 20px;
         }
 
         .done-btn { 
             background: #d1d5db; 
             border: none; 
-            padding: 14px 60px; 
-            border-radius: 12px; 
+            padding: 14px 50px; 
+            border-radius: 14px; 
             font-weight: 700; 
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer; 
-            color: #000; 
-            transition: background 0.3s;
+            color: #111827; 
+            transition: background 0.2s;
         }
         
         .next-arrow { 
             position: absolute; 
-            right: -10px; 
+            right: 0; 
             background: none; 
             border: none; 
-            font-size: 55px; 
+            font-size: 40px; 
             cursor: pointer; 
-            color: #333; 
+            color: #4b5563; 
             display: none; 
+            padding: 10px;
             line-height: 1;
-            padding: 0;
         }
         .next-arrow.visible { display: block; }
 
-        .feedback-bubble { padding: 15px; border-radius: 20px; font-weight: 700; font-style: italic; margin-top: 10px; display: none; font-size: 14px; line-height: 1.3; }
-        .feedback-bubble.red { background-color: var(--alert-red); display: block; }
-        .feedback-bubble.green { background-color: #c5e0b4; display: block; }
+        .feedback-bubble { padding: 16px; border-radius: 18px; font-weight: 600; margin-top: 10px; display: none; font-size: 14px; line-height: 1.4; text-align: left; }
+        .feedback-bubble.red { background-color: #fee2e2; color: #991b1b; display: block; }
+        .feedback-bubble.green { background-color: #dcfce7; color: #166534; display: block; }
         
-        #lenWarning { color: #f44336; font-size: 12px; font-weight: 700; margin-top: 5px; display: none; text-align: center; line-height: 1.2;}
+        #lenWarning { color: #dc2626; font-size: 13px; font-weight: 600; margin-top: 10px; display: none; text-align: left; }
 
-        /* Results Page Styling */
-        .score-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .score-circle { width: 70px; height: 70px; border: 3px solid #666; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: #44a044; }
-        .coverage-box { border: 2px solid #ccc; border-radius: 20px; padding: 12px; margin: 10px 0; font-weight: 700; text-align: center; background: #fff; font-size: 16px; color: #333;}
-        .res-line { border-bottom: 2px solid #000; padding: 6px 0; margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; }
-        .invest-grid { display: flex; gap: 8px; margin-top: 10px; }
-        .invest-box { border: 1px solid #ddd; border-radius: 12px; padding: 8px; flex: 1; text-align: center; background: #fdfdfd; }
-        .invest-box b { display: block; font-size: 10px; color: #666; text-transform: uppercase; }
-        .invest-box span { font-weight: 700; font-size: 13px; color: #333; }
-        .result-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .result-actions button { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; }
+        /* Results Styling */
+        .score-circle { width: 80px; height: 80px; border: 4px solid #4ade80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #166534; margin: 0 auto 20px; }
+        .res-section-title { font-size: 14px; font-weight: 700; color: #166534; text-align: left; margin: 15px 0 5px; }
+        .coverage-display { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 16px; padding: 12px; font-weight: 700; text-align: center; margin-bottom: 15px; font-size: 15px; }
+        .res-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; font-weight: 600; }
+        .invest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+        .invest-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 5px; text-align: center; }
+        .invest-card small { display: block; font-size: 9px; color: #6b7280; text-transform: uppercase; margin-bottom: 4px; }
+        .invest-card span { font-weight: 700; font-size: 11px; color: #111827; }
     </style>
 </head>
 <body>
 
 <div id="survey-container">
-    <!-- Slide 1: Income -->
+    <!-- Slide 1: Monthly Income -->
     <div class="slide active" id="slide1">
         <h2>Monthly Income</h2>
         <p class="description">How much do you earn per month?</p>
-        <input type="number" id="incomeInput" placeholder="Enter Amount">
+        <input type="number" id="incomeInput" placeholder="e.g. 50000" min="0">
         <div class="nav-area">
             <button class="done-btn" onclick="handleIncome()">DONE</button>
             <button class="next-arrow" id="next1" onclick="nextSlide()">➔</button>
         </div>
     </div>
 
-    <!-- Slide 2: Savings -->
+    <!-- Slide 2: Monthly Savings -->
     <div class="slide" id="slide2">
         <h2>Monthly Savings</h2>
         <p class="description">How much do you save per month?</p>
-        <input type="number" id="savingsInput" placeholder="Enter Amount">
+        <input type="number" id="savingsInput" placeholder="e.g. 5000" min="0">
         <div id="savingsFeedback" class="feedback-bubble"></div>
         <div class="nav-area">
             <button class="done-btn" onclick="handleSavings()">DONE</button>
@@ -154,55 +151,56 @@
 
     <!-- Slide 3: Emergency Fund -->
     <div class="slide" id="slide3">
+        <h2>Emergency Fund?</h2>
+        <p class="description">How long does your emergency fund last if you lose your income today?</p>
         <div class="grid-options">
-            <button class="opt-btn" style="background:#f3a3a3" onclick="selectEF(this, 1)">None - 1 Month</button>
-            <button class="opt-btn" style="background:#f9e37d" onclick="selectEF(this, 3)">2 - 3 Months</button>
-            <button class="opt-btn" style="background:#8eb4a6" onclick="selectEF(this, 5)">4 - 6 Months</button>
-            <button class="opt-btn" style="background:#c5e0b4" onclick="selectEF(this, 10)">7 - 12 Months +</button>
+            <button class="opt-btn" style="background:#fecaca" onclick="selectEF(this, 1)">None - 1 Month</button>
+            <button class="opt-btn" style="background:#fef3c7" onclick="selectEF(this, 3)">2 - 3 Months</button>
+            <button class="opt-btn" style="background:#d1fae5" onclick="selectEF(this, 6)">4 - 6 Months</button>
+            <button class="opt-btn" style="background:#bbf7d0" onclick="selectEF(this, 12)">7 - 12 Months +</button>
         </div>
-        <h2>Emergency Fund</h2>
-        <p class="description">How long does your EF last?</p>
         <div id="efFeedback" class="feedback-bubble"></div>
         <div class="nav-area"><button class="next-arrow" id="next3" onclick="nextSlide()">➔</button></div>
     </div>
 
     <!-- Slide 4: Other Savings -->
     <div class="slide" id="slide4">
+        <h2>Other Savings Account?</h2>
+        <p class="description">Aside from your EF, do you have any other savings for other things?</p>
         <div class="grid-options">
-            <button class="opt-btn" style="background:#c5e0b4" onclick="selectOther(this, true)">Yes</button>
-            <button class="opt-btn" style="background:#f3a3a3" onclick="selectOther(this, false)">No</button>
+            <button class="opt-btn" style="background:#bbf7d0" onclick="selectOther(this, true)">Yes</button>
+            <button class="opt-btn" style="background:#fecaca" onclick="selectOther(this, false)">No</button>
         </div>
-        <h2>Other Savings Account</h2>
-        <p class="description">Aside from EF, do you have other savings?</p>
         <div class="nav-area"><button class="next-arrow" id="next4" onclick="nextSlide()">➔</button></div>
     </div>
 
     <!-- Slide 5: Retirement Lifestyle -->
     <div class="slide" id="slide5">
+        <h2>Retirement Lifestyle?</h2>
+        <p class="description">What's your desired monthly budget for your retirement?</p>
         <div class="grid-options">
-            <button class="opt-btn" onclick="selectLifestyle(this, 30000)">₱30K/Month</button>
-            <button class="opt-btn" onclick="selectLifestyle(this, 40000)">₱40K/Month</button>
-            <button class="opt-btn" onclick="selectLifestyle(this, 50000)">₱50K/Month</button>
-            <button class="opt-btn" onclick="selectLifestyle(this, 60000)">₱60K/Month +</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 30000)">₱30,000 / month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 40000)">₱40,000 / month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 50000)">₱50,000 / month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 60000)">₱60,000+ / month</button>
         </div>
-        <h2>Retirement Lifestyle</h2>
-        <p class="description">Desired monthly budget at retirement?</p>
         <div class="nav-area"><button class="next-arrow" id="next5" onclick="nextSlide()">➔</button></div>
     </div>
 
     <!-- Slide 6: Retirement Age -->
     <div class="slide" id="slide6">
-        <div style="text-align:left; margin-bottom:20px; padding: 0 10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <label style="font-weight:700; color:#555">Current Age</label>
-                <input type="number" id="currAge" style="width:100px; margin:0; padding:8px;" placeholder="25">
+        <h2>Retirement Age?</h2>
+        <p class="description">Tell us your age and target retirement age</p>
+        <div style="text-align:left; margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <label style="font-weight:700; color:#374151">Current Age</label>
+                <input type="number" id="currAge" style="width:100px; margin:0; padding:12px;" placeholder="25">
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <label style="font-weight:700; color:#555">Retirement Age</label>
-                <input type="number" id="retAge" style="width:100px; margin:0; padding:8px;" placeholder="65">
+                <label style="font-weight:700; color:#374151">Retirement Age</label>
+                <input type="number" id="retAge" style="width:100px; margin:0; padding:12px;" placeholder="60">
             </div>
         </div>
-        <h2>Retirement Age</h2>
         <div class="nav-area">
             <button class="done-btn" onclick="handleAge()">DONE</button>
             <button class="next-arrow" id="next6" onclick="nextSlide()">➔</button>
@@ -211,71 +209,88 @@
 
     <!-- Slide 7: Protection Budget -->
     <div class="slide" id="slide7">
+        <h2>Protection Budget</h2>
+        <p class="description">This will help us calculate a comfortable proposal that will fit your budget</p>
         <div class="grid-options" id="budgetGrid"></div>
-        <h2 style="margin-top:20px;">Protection Budget</h2>
-        <p class="description">This will help us calculate a comfortable proposal.</p>
         <div class="nav-area"><button class="next-arrow" id="next7" onclick="nextSlide()">➔</button></div>
     </div>
 
     <!-- Slide 8: Protection Length -->
     <div class="slide" id="slide8">
+        <h2>Protection Length</h2>
+        <p class="description">This will help know the Financial Product that suits best for you</p>
         <div class="grid-options">
             <button class="opt-btn" onclick="selectLength(this, '10 Years')">10 Years</button>
             <button class="opt-btn" onclick="selectLength(this, '11-20 Years')">11-20 Years</button>
             <button class="opt-btn" id="untilRetBtn" onclick="selectLength(this, 'Until Retirement')">Until Retirement</button>
             <button class="opt-btn" onclick="selectLength(this, 'Until 100')">Until 100</button>
         </div>
-        <h2>Protection Length</h2>
         <div id="lenWarning">This only recommended for estate planning, please consult your advisor</div>
         <div class="nav-area"><button class="next-arrow" id="next8" onclick="nextSlide()">➔</button></div>
     </div>
 
-    <!-- Slide 9: Final Results -->
+    <!-- Slide 9: Results -->
     <div class="slide" id="slide9">
-        <div class="score-row">
-            <h3 style="color:#44a044; margin:0; font-size:18px;">Financial Score:</h3>
-            <div class="score-circle" id="finalScore">0</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="color:#166534; margin:0; font-size:16px;">Financial Score:</h3>
+            <div class="score-circle" id="finalScore" style="margin:0">0</div>
         </div>
         
-        <h3 style="color:#44a044; margin:5px 0; font-size:14px; text-align:left;">Insurance Coverage:</h3>
-        <div class="coverage-box" id="resCoverage">---</div>
-
-        <div class="res-line"><span>Years of Protection:</span> <span id="resYears">1 - 5 Years</span></div>
-        <div class="res-line"><span>Protection Strength:</span> <span id="resStrength" style="color:#2196F3">Good</span></div>
-
-        <h3 style="margin:10px 0 5px 0; font-size:13px; text-align:left; color:#555;">Product Recommendation:</h3>
-        <div style="font-weight:700; border-bottom:2px solid #000; padding-bottom:5px; text-align:left; font-size:14px;" id="resProduct">TERM INSURANCE / VUL</div>
-
-        <h3 style="color:#44a044; margin:15px 0 5px 0; font-size:14px; text-align:left;">Retirement Recommendation</h3>
+        <div class="res-section-title">Insurance Coverage:</div>
+        <div class="coverage-display" id="resCoverage">---</div>
+        
+        <div class="res-item"><span>Years of Protection:</span> <span id="resYears">1 - 5 Years</span></div>
+        <div class="res-item"><span>Protection Strength:</span> <span id="resStrength" style="color:#2563eb">Good</span></div>
+        
+        <div class="res-section-title" style="color:#374151">Product Recommendation:</div>
+        <div style="font-weight:800; border-bottom:3px solid #111827; padding-bottom:8px; text-align:left; font-size:16px; margin-bottom:15px;" id="resProduct">TERM INSURANCE / VUL</div>
+        
+        <div class="res-section-title">Retirement Recommendation</div>
         <div class="invest-grid">
-            <div class="invest-box"><b>Low Risk</b><span id="lowInv">---</span></div>
-            <div class="invest-box"><b>Med Risk</b><span id="medInv">---</span></div>
-            <div class="invest-box"><b>High Risk</b><span id="highInv">---</span></div>
+            <div class="invest-card">
+                <small>Low Risk (5-6%)</small>
+                <span id="lowInv">---</span>
+            </div>
+            <div class="invest-card">
+                <small>Med Risk (7-8%)</small>
+                <span id="medInv">---</span>
+            </div>
+            <div class="invest-card">
+                <small>High Risk (9-12%)</small>
+                <span id="highInv">---</span>
+            </div>
         </div>
-
-        <div class="result-actions">
-            <button style="background:#e5e7eb; color:#000;" onclick="location.reload()">RETAKE</button>
-            <button style="background:var(--primary-green); color:#000;" onclick="alert('Summary Saved!')">DONE</button>
+        
+        <div style="display:flex; gap:12px; margin-top:25px;">
+            <button style="flex:1; padding:14px; border-radius:14px; font-weight:700; border:none; background:#d1d5db; color:#111827; cursor:pointer;" onclick="location.reload()">RETAKE</button>
+            <button style="flex:1; padding:14px; border-radius:14px; font-weight:700; border:none; background:var(--primary-green); color:#111827; cursor:pointer;" onclick="alert('Analysis Saved!')">DONE</button>
         </div>
     </div>
 </div>
 
 <script>
     let currentSlide = 1;
-    let data = { income: 0, savings: 0, efValue: 0, lifestyle: 0, currAge: 0, retAge: 0, budget: 0, length: '' };
+    let data = { income: 0, savings: 0, efMonths: 0, lifestyle: 0, currAge: 0, retAge: 0, budget: 0, length: '' };
 
     function nextSlide() {
         document.getElementById(`slide${currentSlide}`).classList.remove('active');
         currentSlide++;
         document.getElementById(`slide${currentSlide}`).classList.add('active');
+        
         if(currentSlide === 7) renderBudget();
-        if(currentSlide === 8) document.getElementById('untilRetBtn').innerHTML = `Until Age ${data.retAge || 65}`;
+        if(currentSlide === 8) {
+            const label = data.retAge ? `Until Age ${data.retAge}` : "Until Retirement";
+            document.getElementById('untilRetBtn').innerHTML = label;
+        }
         if(currentSlide === 9) calculateFinal();
     }
 
     function handleIncome() {
         const val = parseFloat(document.getElementById('incomeInput').value);
-        if(val > 0) { data.income = val; document.getElementById('next1').classList.add('visible'); }
+        if(val > 0) {
+            data.income = val;
+            document.getElementById('next1').classList.add('visible');
+        }
     }
 
     function handleSavings() {
@@ -285,17 +300,27 @@
         const ratio = val / data.income;
         const f = document.getElementById('savingsFeedback');
         f.className = 'feedback-bubble green';
-        f.innerText = ratio >= 0.2 ? "Everyone should learn from you!" : (ratio >= 0.1 ? "Good Job! Keep it up!" : "Let's try to save more!");
+        if(ratio >= 0.2) f.innerText = "Everyone should learn from you!";
+        else if(ratio >= 0.1) f.innerText = "Good Job! Keep it up!";
+        else {
+            f.className = 'feedback-bubble red';
+            f.innerText = "Let's try to save more!";
+        }
         document.getElementById('next2').classList.add('visible');
     }
 
     function selectEF(btn, val) {
-        data.efValue = val;
+        data.efMonths = val;
         document.querySelectorAll('#slide3 .opt-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         const f = document.getElementById('efFeedback');
-        f.className = val < 3 ? "feedback-bubble red" : "feedback-bubble green";
-        f.innerText = val < 3 ? "Prioritize building your Emergency Fund" : "Congrats on building that foundation!";
+        if(val < 3) {
+            f.className = "feedback-bubble red";
+            f.innerText = "Prioritize building your Emergency Fund";
+        } else {
+            f.className = "feedback-bubble green";
+            f.innerText = "Congrats on building that foundation!";
+        }
         document.getElementById('next3').classList.add('visible');
     }
 
@@ -315,15 +340,21 @@
     function handleAge() {
         const c = parseInt(document.getElementById('currAge').value);
         const r = parseInt(document.getElementById('retAge').value);
-        if(r > c) { data.currAge = c; data.retAge = r; document.getElementById('next6').classList.add('visible'); }
+        if(r > c) {
+            data.currAge = c;
+            data.retAge = r;
+            document.getElementById('next6').classList.add('visible');
+        }
     }
 
     function renderBudget() {
         const grid = document.getElementById('budgetGrid');
         grid.innerHTML = '';
+        const income = data.income;
+
         const tiers = [
             { l: 0.05, h: 0.08, label: '5-8% Income' },
-            { l: 0.09, h: 0.11, label: '9-12% Income' },
+            { l: 0.09, h: 0.11, label: '9-11% Income' },
             { l: 0.12, h: 0.14, label: '12-14% Income' },
             { l: 0.16, h: 0.20, label: '16% Income or more' }
         ];
@@ -331,19 +362,30 @@
         tiers.forEach(t => {
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
-            const val = Math.round(data.income * t.l);
-            btn.innerHTML = `<b>${t.label}</b><span>₱${val.toLocaleString()}</span>`;
             
-            // Slide 7 Locking Logic
-            const inc = data.income;
-            let locked = false;
-            if(inc <= 25000 && t.label !== '9-12% Income') locked = true;
-            if(inc > 25001 && inc <= 40000 && t.label === '16% Income or more') locked = true;
+            const lowAmt = Math.round(income * t.l);
+            const highAmt = Math.round(income * t.h);
+            const rangeStr = `₱${lowAmt.toLocaleString()} - ₱${highAmt.toLocaleString()}`;
+            
+            btn.innerHTML = `<b>${t.label}</b><span>${rangeStr}</span>`;
+            
+            // LOGIC FROM SCREENSHOT
+            let isLocked = false;
+            // Condition 1 & 2: If income is 0 - 25,000, only 9-11% is unlocked
+            if (income <= 25000) {
+                if (t.label !== '9-11% Income') isLocked = true;
+            } 
+            // Condition 3: If income is 25,001 - 40,000, 16% or more is locked
+            else if (income > 25000 && income <= 40000) {
+                if (t.label === '16% Income or more') isLocked = true;
+            }
+            // Condition 4: If 40,001+, all are unlocked (default isLocked=false)
 
-            if(locked) btn.disabled = true;
-            else {
+            if(isLocked) {
+                btn.disabled = true;
+            } else {
                 btn.onclick = () => {
-                    data.budget = val;
+                    data.budget = lowAmt; // Using low end for internal calcs
                     document.querySelectorAll('#slide7 .opt-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next7').classList.add('visible');
@@ -362,43 +404,48 @@
     }
 
     function calculateFinal() {
-        // Slide 9 Scoring Logic
-        let score = 0;
-        const saveRate = data.savings / data.income;
         const inc = data.income;
-        const ef = data.efValue;
+        const ef = data.efMonths;
+        const saveRate = data.savings / inc;
+        let score = 0;
 
-        if(inc < 30000) {
-            if(ef < 3) score = 2;
-            else if(saveRate < 0.1) score = 4;
-            else score = 6;
+        // SCORING LOGIC FROM SLIDE 9 SCREENSHOT
+        if (inc < 30000) {
+            if (ef < 3) score = 2;
+            else if (ef >= 3 && saveRate < 0.10) score = 4;
+            else if (ef >= 3 && saveRate >= 0.10) score = 6;
         } else {
-            if(ef < 3) score = 4;
-            else if(ef < 6) score = 6;
-            else if(saveRate < 0.1) score = 8;
-            else score = 10;
+            // Income > 30,001
+            if (ef < 3 && saveRate < 0.10) score = 4;
+            else if (ef >= 3 && ef < 6 && saveRate < 0.10) score = 6;
+            else if (ef >= 6 && saveRate < 0.10) score = 8;
+            else if (ef >= 6 && saveRate >= 0.10) score = 10;
         }
 
         document.getElementById('finalScore').innerText = score;
-        
-        // Coverage Estimate
+
+        // Coverage Logic
         const b = data.budget;
         let cov = "₱1,000,000 - ₱1,500,000";
-        if(b > 2500) cov = "₱2,000,000 - ₱3,500,000";
-        if(b > 4500) cov = "₱4,000,000+";
+        if (b > 2500) cov = "₱2,000,000 - ₱3,500,000";
+        if (b > 4500) cov = "₱4,000,000+";
         document.getElementById('resCoverage').innerText = cov;
 
-        // Retirement Prep
+        // Retirement Inv Recommendation
         const years = data.retAge - data.currAge;
-        const target = data.lifestyle * 12 * 25; // 25 years of retirement
-        const calc = (rate) => {
+        const targetFund = data.lifestyle * 12 * 25; // 25x rule
+        
+        const calcMonthly = (rate) => {
             const r = rate / 12;
             const n = years * 12;
-            return Math.round((target * r) / (Math.pow(1+r, n) - 1));
+            if (n <= 0) return 0;
+            const pmt = (targetFund * r) / (Math.pow(1 + r, n) - 1);
+            return Math.round(pmt);
         };
-        document.getElementById('lowInv').innerText = "₱" + calc(0.05).toLocaleString();
-        document.getElementById('medInv').innerText = "₱" + calc(0.07).toLocaleString();
-        document.getElementById('highInv').innerText = "₱" + calc(0.10).toLocaleString();
+
+        document.getElementById('lowInv').innerText = "₱" + calcMonthly(0.06).toLocaleString();
+        document.getElementById('medInv').innerText = "₱" + calcMonthly(0.08).toLocaleString();
+        document.getElementById('highInv').innerText = "₱" + calcMonthly(0.12).toLocaleString();
     }
 </script>
 </body>
