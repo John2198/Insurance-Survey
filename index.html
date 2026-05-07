@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Survey V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-bg: #ffffff;
+            --primary-green: #10b981;
+            --alert-red: #ef4444;
+            --text-main: #333;
+            --text-faded: #666;
+            --btn-gray: #e5e7eb;
+        }
+
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-dark); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+        #survey-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 450px;
+            min-height: 600px;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .slide { display: none; flex-direction: column; height: 100%; }
+        .slide.active { display: flex; }
+
+        h2 { font-size: 24px; color: var(--text-main); margin-bottom: 10px; }
+        p.description { font-size: 14px; color: var(--text-faded); margin-bottom: 30px; }
+
+        /* Inputs & Buttons */
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--btn-gray);
+            border-radius: 12px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .opt-btn {
+            background: var(--btn-gray);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .opt-btn.selected { background: var(--primary-green); color: white; }
+        .opt-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Navigation */
+        .nav-area { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+        .done-btn { background: #d1d5db; border: none; padding: 12px 30px; border-radius: 25px; font-weight: 700; cursor: pointer; visibility: hidden; }
+        .done-btn.visible { visibility: visible; }
+        
+        .next-arrow { 
+            background: none; border: none; font-size: 40px; cursor: pointer; color: var(--text-faded); 
+            display: none; transition: color 0.3s;
+        }
+        .next-arrow.active { display: block; color: var(--text-main); }
+
+        /* Logic Feedbacks */
+        .feedback { margin-top: 15px; font-weight: 700; font-size: 15px; display: none; }
+        .feedback.red { color: var(--alert-red); display: block; }
+        .feedback.green { color: var(--primary-green); display: block; }
+
+        /* Results Slide Styles */
+        .score-circle { width: 80px; height: 80px; border: 4px solid var(--primary-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; margin-left: auto; }
+        .result-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; font-size: 14px; }
+        .result-label { font-weight: 600; color: var(--text-faded); }
+        .investment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .invest-box { background: #f9fafb; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #eee; }
+        .invest-box small { font-size: 10px; display: block; }
+        .invest-box span { font-weight: 700; font-size: 12px; color: var(--primary-green); }
+        .greyed-out { opacity: 0.3; }
+    </style>
+</head>
+<body>
+
+<div id="survey-container">
+    <div class="slide active" id="slide1">
+        <h2>Monthly Income</h2>
+        <p class="description">How much do you earn per month?</p>
+        <input type="number" id="incomeInput" placeholder="eg. 50000">
+        <div class="nav-area">
+            <button class="done-btn" onclick="handleIncome()">DONE</button>
+            <button class="next-arrow" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide2">
+        <h2>Monthly Savings</h2>
+        <p class="description">How much do you save per month?</p>
+        <input type="number" id="savingsInput" placeholder="eg. 5000">
+        <div id="savingsFeedback" class="feedback"></div>
+        <div class="nav-area">
+            <button class="done-btn" onclick="handleSavings()">DONE</button>
+            <button class="next-arrow" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide3">
+        <h2>Emergency Fund</h2>
+        <p class="description">How long can your EF last if you lose your income?</p>
+        <div class="grid-options">
+            <button class="opt-btn" onclick="selectEF(this, 1, 'None - 1 Month')">None - 1 Month</button>
+            <button class="opt-btn" onclick="selectEF(this, 3, '2 - 3 Months')">2 - 3 Months</button>
+            <button class="opt-btn" onclick="selectEF(this, 5, '4 - 6 Months')">4 - 6 Months</button>
+            <button class="opt-btn" onclick="selectEF(this, 10, '7 - 12 Months +')">7 - 12 Months +</button>
+        </div>
+        <div id="efFeedback" class="feedback"></div>
+        <div class="nav-area">
+            <button class="next-arrow" id="efNext" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide4">
+        <h2>Other Savings Account</h2>
+        <p class="description">Sinking Funds, Travel Funds, etc.?</p>
+        <div class="grid-options">
+            <button class="opt-btn" onclick="selectOther(this, true)">Yes</button>
+            <button class="opt-btn" onclick="selectOther(this, false)">No</button>
+        </div>
+        <div class="nav-area">
+            <button class="next-arrow" id="otherNext" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide5">
+        <h2>Retirement Lifestyle</h2>
+        <p class="description">Total budget per month for retirement lifestyle?</p>
+        <div class="grid-options">
+            <button class="opt-btn" onclick="selectLifestyle(this, 30000)">₱30K / Month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 40000)">₱40K / Month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 50000)">₱50K / Month</button>
+            <button class="opt-btn" onclick="selectLifestyle(this, 60000)">₱60K+ / Month</button>
+        </div>
+        <div class="nav-area">
+            <button class="next-arrow" id="lifeNext" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide6">
+        <h2>Retirement Age</h2>
+        <p class="description">Let's calculate your prep window.</p>
+        <input type="number" id="currAge" placeholder="Current Age (eg. 25)">
+        <input type="number" id="retAge" placeholder="Retirement Age (eg. 65)">
+        <p id="ageCalcDisplay" style="font-weight:bold;"></p>
+        <div id="ageFeedback" class="feedback red"></div>
+        <div class="nav-area">
+            <button class="done-btn visible" onclick="handleAge()">DONE</button>
+            <button class="next-arrow" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide7">
+        <h2>Protection Budget</h2>
+        <p class="description">Comfortable monthly premium for your plan.</p>
+        <div class="grid-options" id="budgetGrid">
+            </div>
+        <div id="budgetFeedback" class="feedback red"></div>
+        <div class="nav-area">
+            <button class="next-arrow" id="budgetNext" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide8">
+        <h2>Protection Length</h2>
+        <p class="description">How long should the coverage last?</p>
+        <div class="grid-options">
+            <button class="opt-btn" onclick="selectLength(this, '10 Years')">10 Years</button>
+            <button class="opt-btn" onclick="selectLength(this, '11-20 Years')">11-20 Years</button>
+            <button class="opt-btn" id="untilRetBtn" onclick="selectLength(this, 'Until Retirement')">Until Retirement</button>
+            <button class="opt-btn" onclick="selectLength(this, 'Until 100')">Until 100</button>
+        </div>
+        <div id="lengthFeedback" class="feedback red"></div>
+        <div class="nav-area">
+            <button class="next-arrow" id="lengthNext" onclick="nextSlide()">➔</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide9">
+        <div style="display:flex; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin:0;">Final Summary</h2>
+            <div class="score-circle" id="finalScore">0</div>
+        </div>
+        
+        <div class="result-item">
+            <span class="result-label">Insurance Coverage:</span>
+            <span id="resCoverage">---</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Years of Protection:</span>
+            <span id="resYears">---</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Protection Strength:</span>
+            <span id="resStrength" style="font-weight:bold;">---</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Recommendation:</span>
+            <span id="resProduct" style="color:var(--primary-green); font-weight:700;">---</span>
+        </div>
+
+        <h3 style="font-size:14px; margin-top:20px;">Retirement Investment (Monthly)</h3>
+        <div class="investment-grid" id="investGrid">
+            <div class="invest-box">
+                <small>Low Risk</small>
+                <span id="invLow">---</span>
+            </div>
+            <div class="invest-box">
+                <small>Medium Risk</small>
+                <span id="invMed">---</span>
+            </div>
+            <div class="invest-box">
+                <small>High Risk</small>
+                <span id="invHigh">---</span>
+            </div>
+        </div>
+
+        <div class="nav-area" style="margin-top:20px;">
+            <button class="opt-btn" onclick="location.reload()">RETAKE</button>
+            <button class="opt-btn selected" onclick="alert('Summary Saved!')">SAVE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 1;
+    let data = {
+        income: 0, savings: 0, efValue: 0, otherSavings: false,
+        lifestyle: 0, currAge: 0, retAge: 0, prepYears: 0,
+        protBudget: 0, protLength: ''
+    };
+
+    function nextSlide() {
+        document.getElementById(`slide${currentSlide}`).classList.remove('active');
+        currentSlide++;
+        document.getElementById(`slide${currentSlide}`).classList.add('active');
+        if(currentSlide === 7) renderBudgetButtons();
+        if(currentSlide === 8) document.getElementById('untilRetBtn').innerText = `Until Age ${data.retAge}`;
+        if(currentSlide === 9) calculateFinal();
+    }
+
+    // Logic Handlers
+    function handleIncome() {
+        const val = document.getElementById('incomeInput').value;
+        if(val > 0) {
+            data.income = parseFloat(val);
+            document.querySelector('#slide1 .next-arrow').classList.add('active');
+            document.querySelector('#slide2 .done-btn').classList.add('visible');
+        }
+    }
+
+    function handleSavings() {
+        const val = document.getElementById('savingsInput').value;
+        const ratio = (val / data.income) * 100;
+        const f = document.getElementById('savingsFeedback');
+        data.savings = parseFloat(val);
+
+        f.className = 'feedback green';
+        if(ratio < 10) f.innerText = "Let's up that savings game!";
+        else if(ratio <= 15) f.innerText = "Good Job! Keep it up!";
+        else if(ratio <= 20) f.innerText = "Wow! You're a very admirable saver!";
+        else f.innerText = "Everyone should learn from you!";
+        
+        document.querySelector('#slide2 .next-arrow').classList.add('active');
+    }
+
+    function selectEF(btn, val, label) {
+        data.efValue = val;
+        const f = document.getElementById('efFeedback');
+        document.querySelectorAll('#slide3 .opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        
+        f.className = 'feedback';
+        if(val === 1) { f.innerText = "Prioritize building your Emergency Fund"; f.classList.add('red'); }
+        else if(val === 3) { f.innerText = "Congrats on building that foundation!"; f.classList.add('green'); }
+        else if(val === 5) { f.innerText = "You are secure than most people!"; f.classList.add('green'); }
+        else { f.innerText = "Wow! Its time for you to build wealth!"; f.classList.add('green'); }
+        
+        document.getElementById('efNext').classList.add('active');
+    }
+
+    function selectOther(btn, val) {
+        data.otherSavings = val;
+        document.querySelectorAll('#slide4 .opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('otherNext').classList.add('active');
+    }
+
+    function selectLifestyle(btn, val) {
+        data.lifestyle = val;
+        document.querySelectorAll('#slide5 .opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('lifeNext').classList.add('active');
+    }
+
+    function handleAge() {
+        const c = parseInt(document.getElementById('currAge').value);
+        const r = parseInt(document.getElementById('retAge').value);
+        const f = document.getElementById('ageFeedback');
+        
+        if(r <= c) {
+            f.innerText = "Retirement age must be greater than current age.";
+            f.style.display = "block";
+            return;
+        }
+        
+        data.currAge = c;
+        data.retAge = r;
+        data.prepYears = r - c;
+        f.style.display = "none";
+        document.getElementById('ageCalcDisplay').innerText = `Years before Retirement: ${data.prepYears}`;
+        document.querySelector('#slide6 .next-arrow').classList.add('active');
+    }
+
+    function renderBudgetButtons() {
+        const grid = document.getElementById('budgetGrid');
+        grid.innerHTML = '';
+        const inc = data.income;
+        const tiers = [
+            { label: '5-8%', low: 0.05, high: 0.08 },
+            { label: '9-11%', low: 0.09, high: 0.11 },
+            { label: '12-14%', low: 0.12, high: 0.14 },
+            { label: '16%+', low: 0.16, high: 0.20 }
+        ];
+
+        tiers.forEach(t => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            const pLow = Math.round(inc * t.low);
+            const pHigh = Math.round(inc * t.high);
+            btn.innerHTML = `${t.label}<br>₱${pLow.toLocaleString()} - ₱${pHigh.toLocaleString()}`;
+            
+            // Conditions Logic
+            let locked = false;
+            if (inc <= 25000 && t.label !== '9-11%') locked = true;
+            if (inc > 25000 && inc <= 40000 && t.label === '16%+') locked = true;
+
+            if (locked) {
+                btn.disabled = true;
+                btn.onclick = () => { document.getElementById('budgetFeedback').innerText = "sorry, no appropriate plan for this budget please, consult your advisor"; };
+            } else {
+                btn.onclick = () => {
+                    document.querySelectorAll('#slide7 .opt-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    data.protBudget = pLow; // Using low end for coverage calculation
+                    document.getElementById('budgetNext').classList.add('active');
+                };
+            }
+            grid.appendChild(btn);
+        });
+    }
+
+    function selectLength(btn, val) {
+        document.querySelectorAll('#slide8 .opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        data.protLength = val;
+        const f = document.getElementById('lengthFeedback');
+        
+        if(val === 'Until 100') {
+            f.innerText = "This only recommended for estate planning, please consult your advisor";
+            f.style.display = "block";
+        } else {
+            f.style.display = "none";
+        }
+        document.getElementById('lengthNext').classList.add('active');
+    }
+
+    function calculateFinal() {
+        // 1. Financial Score
+        let score = 0;
+        const inc = data.income;
+        const ef = data.efValue;
+        const savRatio = (data.savings / inc) * 100;
+
+        if (inc < 30000) {
+            if (ef < 3) score = 2;
+            else if (savRatio < 10) score = 4;
+            else score = 6;
+        } else {
+            if (ef < 3) score = 4;
+            else if (ef < 5) score = 6;
+            else if (savRatio < 10) score = 8;
+            else score = 10;
+        }
+        document.getElementById('finalScore').innerText = score;
+
+        // 2. Product Recommendation
+        const lp = data.protLength;
+        let prod = "";
+        if (lp === '10 Years') prod = "TERM Insurance";
+        else if (lp === '11-20 Years') prod = "TERM / VUL / Endowment";
+        else if (lp === 'Until Retirement') prod = "VUL / Endowment / Limited Pay";
+        else prod = "Whole Life / Limited Pay VUL";
+        document.getElementById('resProduct').innerText = prod;
+
+        // 3. Insurance Coverage
+        const budget = data.protBudget;
+        let covText = "";
+        if (data.currAge > 40) covText = "Please consult advisor (Age Assessment)";
+        else if (budget >= 7001) covText = "Consult advisor for best coverage";
+        else {
+            if (budget < 2500) covText = "₱1,000,000 - ₱1,500,000";
+            else if (budget < 3001) covText = "₱1,200,000 - ₱2,000,000";
+            else if (budget < 3500) covText = "₱1,500,000 - ₱2,500,000";
+            else if (budget < 4500) covText = "₱2,000,000 - ₱2,500,000";
+            else if (budget < 5001) covText = "₱2,200,000 - ₱3,500,000";
+            else if (budget < 6001) covText = "₱2,750,000 - ₱4,000,000";
+            else covText = "₱3,250,000 - ₱5,500,000";
+        }
+        document.getElementById('resCoverage').innerText = covText;
+
+        // 4. Years of Protection
+        if(data.currAge <= 40 && budget < 7001) {
+            const rangeParts = covText.replace(/₱|,/g, '').split(' - ');
+            const median = (parseFloat(rangeParts[0]) + parseFloat(rangeParts[1])) / 2;
+            const years = Math.round((median * 0.008) * 12);
+            document.getElementById('resYears').innerText = `${years} Years`;
+            let strength = "Low";
+            if (years > 9) strength = "Strong";
+            else if (years >= 6) strength = "Good";
+            document.getElementById('resStrength').innerText = strength;
+        }
+
+        // 5. Retirement Investment Calculation
+        const yearsLeft = data.prepYears;
+        const targetMonthly = data.lifestyle;
+        const grid = document.getElementById('investGrid');
+        
+        if (data.efValue < 3) {
+            grid.classList.add('greyed-out');
+        } else {
+            grid.classList.remove('greyed-out');
+            let rates = [0.05, 0.06, 0.07]; // Low, Med, High
+            if (yearsLeft > 30) rates = [0.07, 0.08, 0.10];
+            else if (yearsLeft >= 26) rates = [0.06, 0.07, 0.08];
+
+            const calcInvest = (r) => {
+                const monthlyRate = r / 12;
+                const months = yearsLeft * 12;
+                // Target: Future Value that can provide lifestyle for ~25 years
+                const totalTarget = targetMonthly * 12 * 25; 
+                const monthlyNeeded = (totalTarget * monthlyRate) / (Math.pow(1 + monthlyRate, months) - 1);
+                return Math.round(monthlyNeeded);
+            };
+
+            document.getElementById('invLow').innerText = `₱${calcInvest(rates[0]).toLocaleString()}`;
+            document.getElementById('invMed').innerText = `₱${calcInvest(rates[1]).toLocaleString()}`;
+            document.getElementById('invHigh').innerText = `₱${calcInvest(rates[2]).toLocaleString()}`;
+        }
+    }
+</script>
+
+</body>
+</html>
